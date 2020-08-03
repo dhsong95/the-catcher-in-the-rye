@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Book Data Directory
+ebook/
+
+# Visual Studio Code
+.vscode/
