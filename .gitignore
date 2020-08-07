@@ -133,3 +133,6 @@ ebook/
 
 # Visual Studio Code
 .vscode/
+
+# NLTK
+nltk_data/
