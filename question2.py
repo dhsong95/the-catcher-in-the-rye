@@ -2,6 +2,7 @@ from collections import Counter
 from collections import defaultdict
 
 from nltk.corpus import stopwords
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -48,28 +49,78 @@ def get_word_frequency_information(book):
     return word_frequency_information
 
 
-def draw_plot_for_book_length(book_length_information):
-    chapter = book_length_information.chapter
-    length_char = book_length_information.length_char
-    length_word = book_length_information.length_word
-    length_unique_word = book_length_information.length_unique_word
+def get_top_word_frequency_information(word_freq_info, topn=100):
+    words = word_freq_info.word.unique()
+    frequencies =\
+        word_freq_info.groupby(by='word').sum().loc[words, 'frequency'].values
 
-    plt.figure(figsize=(12, 9))
-    sns.lineplot(x=chapter, y=length_char, label='length by character')
-    sns.lineplot(x=chapter, y=length_word, label='length by word')
-    sns.lineplot(
-        x=chapter, y=length_unique_word,
-        label='length by unique word'
+    top_word_freq_info = pd.DataFrame(
+        zip(
+            words,
+            frequencies
+        ),
+        columns=['word', 'frequency']
     )
 
-    plt.xlabel('chapter')
-    plt.ylabel('length')
-    plt.title('How long each chapter is')
+    top_word_freq_info = top_word_freq_info.sort_values(
+        by='frequency', ascending=False, ignore_index=True
+    )
+    top_word_freq_info = top_word_freq_info.head(topn)
 
-    plt.xticks(chapter)
+    top_word_freq_info.to_csv(
+        './output/dataframes/q2-top_word_frequency_information.csv',
+        index=False, encoding='utf-8'
+    )
+    return top_word_freq_info
+
+
+def draw_barplot_top_word_frequency_information(top_word_freq_info, badwords):
+    badword_index =\
+        top_word_freq_info[top_word_freq_info.word.isin(badwords)].index
+    non_badword_index =\
+        top_word_freq_info[~top_word_freq_info.word.isin(badwords)].index
+
+    plt.figure(figsize=(12, 9))
+    plt.bar(
+        x=badword_index,
+        height=top_word_freq_info.loc[badword_index, 'frequency'],
+        color='r', label='badwords{goddam, hell, damn, bastard}'
+    )
+    plt.bar(
+        x=non_badword_index,
+        height=top_word_freq_info.loc[non_badword_index, 'frequency'],
+        color='b'
+    )
+
     plt.legend()
+    plt.xticks([])
+    plt.xlabel('word')
+    plt.ylabel('frequency')
+    plt.title('Top Word Frequency Distribution. (feat. badwords)')
+    plt.savefig('./output/figures/q2-top_word_frequency.png')
 
-    plt.savefig('./output/figures/q1-book_length_distribution.png')
+
+def draw_wordcloud_top_word_frequency_information(top_word_freq_info):
+    word_freq = {word: freq for word, freq in zip(
+        top_word_freq_info['word'], top_word_freq_info['frequency']
+    )}
+    wc = WordCloud(
+        background_color='white',
+        max_words=1000,
+        contour_width=3,
+        contour_color='firebrick',
+        random_state=2020
+    )
+    wc = wc.generate_from_frequencies(word_freq)
+
+    plt.figure(figsize=(12, 12))
+    plt.imshow(wc)
+
+    plt.xticks([])
+    plt.yticks([])
+    plt.axis('off')
+    plt.title('WordCloud for Top Words in Novel')
+    plt.savefig('./output/figures/q2-top_word_frequency_wordcloud.png')
 
 
 if __name__ == "__main__":
@@ -79,4 +130,11 @@ if __name__ == "__main__":
     book = load_epub(epub_path)
     book = process_text_data(book)
 
-    word_frequency_information = get_word_frequency_information(book)
+    word_freq_info = get_word_frequency_information(book)
+    top_word_freq_info = get_top_word_frequency_information(
+        word_freq_info, topn=200
+    )
+
+    badwords = ['goddam', 'hell', 'damn', 'bastard']
+    draw_barplot_top_word_frequency_information(top_word_freq_info, badwords)
+    draw_wordcloud_top_word_frequency_information(top_word_freq_info)
