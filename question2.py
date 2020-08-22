@@ -105,6 +105,8 @@ def draw_wordcloud_top_word_frequency_information(top_word_freq_info):
         top_word_freq_info['word'], top_word_freq_info['frequency']
     )}
     wc = WordCloud(
+        width=800,
+        height=800,
         background_color='white',
         max_words=1000,
         contour_width=3,
