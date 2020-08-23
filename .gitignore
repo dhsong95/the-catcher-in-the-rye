@@ -136,3 +136,6 @@ ebook/
 
 # NLTK
 nltk_data/
+
+# OSX
+.DS_Store
