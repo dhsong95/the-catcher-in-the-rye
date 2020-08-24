@@ -56,3 +56,32 @@ python question2.py
 상위 200개의 단어가 무엇인지 워드 클라우드를 통해 살펴본다.
 
 ![](./output/figures/q2-top_word_frequency_wordcloud.png)
+
+## Q3. 호밀밭의 파수꾼에서 주요한 인물들과 관련된 단어는?
+
+```
+python question3.py
+```
+
+Negative Sampling SkipGram 기반의 word2vec을 사용해서 유사한 단어들을 찾아본다.
+
+### Holden과 유사한 단어
+
+소설의 주인공 Holden과 긴밀하게 연결된 단어는 다음과 같다.
+
+|단어|유사도|
+|---|----|
+|caulfield|0.7685014605522156|
+|bein|0.7494996786117554|
+|esq|0.7236199378967285|
+|grendel|0.7149597406387329|
+|randal|0.7020297050476074|
+|thanks|0.6955091953277588|
+|well|0.6922035217285156|
+|skirt|0.6833012700080872|
+|magic|0.6756631135940552|
+|4b|0.6755202412605286|
+
+우선 Hodle의 성인 Caulfield가 가장 높은 유사도를 보인다. 당연히 Holden Caulfield와 같이 Full Name으로 등장하였기 때문에 충분히 납득이 된다.
+
+특히 눈에 띄는 것은 4b이다. 4b는 Phoebe의 약어로서 Holden이 유일하게 좋아하는 인물인데, 소설 속에서 Holden과 같이 많이 언급되는 것으로 보인다.
