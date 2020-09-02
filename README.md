@@ -1,6 +1,7 @@
 # 데이터로 읽은 책: 호밀밭의 파수꾼 (The Catcher in the Rye)
 
 **호밀밭의 파수꾼 영문판을 데이터 분석을 통해 샅샅히 파헤쳐본다.**
+[블로그 링크](https://dhsong10.tistory.com/50)
 
 ---
 
